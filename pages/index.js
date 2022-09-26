@@ -18,7 +18,7 @@ export default function Home() {
       <Plantilla>
         <main className={styles.main}>
           <h1 className={styles.title}>
-            Welcome to <a href="https://nextjs.org">Next.js!</a>
+            Hagámoslo juntos <a href="https://nextjs.org">Next.js!</a>
           </h1>
           <Link href="/login">Login</Link>-<Link href="/profile">Perfil</Link>
           <p className={styles.description}>
