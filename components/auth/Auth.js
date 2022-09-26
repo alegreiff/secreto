@@ -36,12 +36,13 @@ const Auth = ({ setUser }) => {
       provider: "github",
     }); */
 
+    const rutaRedireccion = window.location.origin + "/polla/";
     const { user, session, error } = await supabase.auth.signIn(
       {
         provider: "github",
       },
       {
-        redirectTo: "/polla",
+        redirectTo: rutaRedireccion,
       }
     );
   };
