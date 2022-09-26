@@ -41,7 +41,7 @@ const Auth = ({ setUser }) => {
         provider: "github",
       },
       {
-        redirectTo: "https://noesmipolla.vercel.app/polla",
+        redirectTo: "/polla",
       }
     );
   };
