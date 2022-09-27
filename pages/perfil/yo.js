@@ -20,9 +20,10 @@ import {
 import { useUser } from "@supabase/auth-helpers-react";
 import Plantilla from "../../components/layout/MainLayout";
 
-export default function Jefe({ equipos }) {
+export default function Jefe({ equipos, favoritos }) {
   const [profile, setProfile] = useState(null);
   const { user, error } = useUser();
+  console.log("FAVS", favoritos);
 
   useEffect(() => {
     async function loadPerfil() {
@@ -58,6 +59,7 @@ export default function Jefe({ equipos }) {
       hinchade: profile?.hincha ? profile.hincha : "",
       polleroalias: profile?.alias ? profile.alias : "",
       userId: user?.id,
+      favorito: profile?.favorito ? profile?.favorito : "",
       //userId: "jkio8",
     },
     enableReinitialize: true,
@@ -68,6 +70,7 @@ export default function Jefe({ equipos }) {
         .min(6, "Mínimo seis caracteres")
         .max(20, "Máximo 20 caracteres"),
       hinchade: Yup.string().required("Seleccione una opción"),
+      favorito: Yup.string().required("Seleccione su equipo más querido"),
     }),
     onSubmit: async (values, actions) => {
       //console.log(JSON.stringify(values, null, 2));
@@ -78,6 +81,7 @@ export default function Jefe({ equipos }) {
         .update({
           hincha: values.hinchade,
           alias: values.polleroalias,
+          favorito: values.favorito,
         })
         .eq("id", user?.id)
         .single();
@@ -135,6 +139,25 @@ const { data, error } = await supabase
           <FormErrorMessage>{formik.errors.hinchade}</FormErrorMessage>
         </FormControl>
         <FormControl
+          isInvalid={formik.errors.favorito && formik.touched.favorito}
+        >
+          <FormLabel>Mi favorito es...</FormLabel>
+          <Select
+            placeholder="El campeón será"
+            name="favorito"
+            value={formik.values.favorito}
+            {...formik.getFieldProps("favorito")}
+          >
+            {favoritos &&
+              favoritos.map((eq) => (
+                <option key={eq.id} value={eq.id}>
+                  {eq.nombre}
+                </option>
+              ))}
+          </Select>
+          <FormErrorMessage>{formik.errors.hinchade}</FormErrorMessage>
+        </FormControl>
+        <FormControl
           isInvalid={formik.errors.polleroalias && formik.touched.polleroalias}
         >
           <Input
@@ -174,7 +197,11 @@ export const getServerSideProps = withPageAuth({
         nombre:unnest
         `
       );
-    return { props: { equipos } };
+    const { data: favoritos } = await supabaseServerClient(ctx)
+      .from("equipos")
+      .select("id, nombre");
+
+    return { props: { equipos, favoritos } };
   },
 });
 
