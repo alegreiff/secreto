@@ -76,7 +76,7 @@ const Auth = ({ setUser }) => {
   };
 
   const handleSignIn = async () => {
-    const rutaRedireccion = window.location.origin + "/polla";
+    const rutaRedireccion = window.location.origin + "/polla/";
     console.log("ROUTE", rutaRedireccion);
     try {
       const { user, session, error } = await supabase.auth.signIn({
@@ -86,7 +86,7 @@ const Auth = ({ setUser }) => {
       if (error) throw error;
       if (user) {
         //setUser(user);
-        router.push("/");
+        router.push("/polla");
       }
       Swal.fire({
         title: "Bienvenido",
