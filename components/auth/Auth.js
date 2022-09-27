@@ -76,6 +76,8 @@ const Auth = ({ setUser }) => {
   };
 
   const handleSignIn = async () => {
+    const rutaRedireccion = window.location.origin + "/polla";
+    console.log("ROUTE", rutaRedireccion);
     try {
       const { user, session, error } = await supabase.auth.signIn({
         email,
