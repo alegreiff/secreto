@@ -44,3 +44,6 @@ export default function Home() {
     </div>
   );
 }
+/* 
+https://dsbiqexajjcyswddmxve.supabase.co/auth/v1/verify?token=c5207f5c6b789182d62c1b6eb5e1dfb837f24fb6c3dfc09586b7550e&type=recovery&redirect_to=http://localhost:3000/
+*/

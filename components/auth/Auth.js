@@ -31,12 +31,36 @@ const Auth = ({ setUser }) => {
     return usuario?.length;
   };
 
+  const perdiMiClave = async () => {
+    const rutaRedireccion = window.location.origin + "/polla/";
+    const { data, error } = await supabase.auth.api.resetPasswordForEmail(
+      email,
+      {
+        redirectTo: rutaRedireccion,
+      }
+    );
+  };
+
+  const signInWithGoogle = async () => {
+    console.log("Google Your");
+    const rutaRedireccion = window.location.origin + "/polla/";
+    const { user, session, error } = await supabase.auth.signIn(
+      {
+        provider: "google",
+      },
+      {
+        redirectTo: rutaRedireccion,
+      }
+    );
+  };
+
   const signInWithGitHub = async () => {
     /* supabase.auth.signIn({
       provider: "github",
     }); */
 
     const rutaRedireccion = window.location.origin + "/polla/";
+    console.log("ROUTE", rutaRedireccion);
     const { user, session, error } = await supabase.auth.signIn(
       {
         provider: "github",
@@ -137,7 +161,11 @@ const Auth = ({ setUser }) => {
           p={8}
         >
           <Stack spacing={4} as="form">
+            <Button onClick={signInWithGoogle}>Log in with Google</Button>
+            <hr />
             <Button onClick={signInWithGitHub}>Log in with GitHub</Button>
+            <hr />
+            <Button onClick={perdiMiClave}>Bestia</Button>
             <FormControl id="email">
               <FormLabel>Correo electrónico</FormLabel>
               <Input
