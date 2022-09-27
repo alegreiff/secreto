@@ -1,8 +1,10 @@
+import { getUser } from "@supabase/auth-helpers-nextjs";
 import { useEffect } from "react";
 import Plantilla from "../../components/layout/MainLayout";
 import supabase from "../../utils/useSupabase";
 
-export default function PageIndexPolla() {
+export default function PageIndexPolla({ user }) {
+  console.log(user);
   useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (event == "PASSWORD_RECOVERY") {
@@ -23,4 +25,10 @@ export default function PageIndexPolla() {
       <h4>Solo los justos podrán entenderlo</h4>
     </Plantilla>
   );
+}
+
+export async function getServerSideProps(ctx) {
+  const { user } = await getUser(ctx);
+
+  return { props: { user } };
 }
