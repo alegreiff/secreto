@@ -41,10 +41,10 @@ const Auth = ({ setUser }) => {
     );
   };
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = () => {
     console.log("Google Your");
     const rutaRedireccion = window.location.origin + "/polla/";
-    const { user, session, error } = await supabase.auth.signIn(
+    const { user, session, error } = supabase.auth.signIn(
       {
         provider: "google",
       },
