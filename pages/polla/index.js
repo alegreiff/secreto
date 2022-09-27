@@ -4,7 +4,9 @@ import Plantilla from "../../components/layout/MainLayout";
 import supabase from "../../utils/useSupabase";
 
 export default function PageIndexPolla({ user }) {
-  console.log(user);
+  if (!user?.email) {
+    window.location.reload();
+  }
   useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (event == "PASSWORD_RECOVERY") {
