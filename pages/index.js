@@ -1,12 +1,13 @@
-import { useUser } from "@supabase/auth-helpers-react";
+import { getUser } from "@supabase/auth-helpers-nextjs";
+//import { useUser } from "@supabase/auth-helpers-react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import Plantilla from "../components/layout/MainLayout";
 import styles from "../styles/Home.module.css";
 
-export default function Home() {
-  const { user, error } = useUser();
+export default function Home({ user }) {
+  //const { user, error } = useUser();
 
   return (
     <div className={styles.container}>
@@ -43,6 +44,12 @@ export default function Home() {
       </footer>
     </div>
   );
+}
+
+export async function getServerSideProps(ctx) {
+  const { user } = await getUser(ctx);
+
+  return { props: { user } };
 }
 /* 
 https://dsbiqexajjcyswddmxve.supabase.co/auth/v1/verify?token=c5207f5c6b789182d62c1b6eb5e1dfb837f24fb6c3dfc09586b7550e&type=recovery&redirect_to=http://localhost:3000/

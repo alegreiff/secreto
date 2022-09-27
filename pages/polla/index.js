@@ -1,11 +1,10 @@
-import { getUser } from "@supabase/auth-helpers-nextjs";
+import { getUser, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { useEffect } from "react";
 import Plantilla from "../../components/layout/MainLayout";
 import supabase from "../../utils/useSupabase";
 
-export default function PageIndexPolla({ user }) {
-  console.log(user);
-  useEffect(() => {
+export default function PageIndexPolla({ data }) {
+  /* useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (event == "PASSWORD_RECOVERY") {
         const newPassword = prompt(
@@ -19,7 +18,7 @@ export default function PageIndexPolla({ user }) {
         if (error) alert("There was an error updating your password.");
       }
     });
-  }, []);
+  }, []); */
   return (
     <Plantilla>
       <h4>Solo los justos podrán entenderlo</h4>
@@ -27,8 +26,13 @@ export default function PageIndexPolla({ user }) {
   );
 }
 
-export async function getServerSideProps(ctx) {
-  const { user } = await getUser(ctx);
-
-  return { props: { user } };
-}
+export const getServerSideProps = withPageAuth({
+  redirectTo: "/",
+  async getServerSideProps(ctx) {
+    // Run queries with RLS on the server
+    const { data } = await supabaseServerClient(ctx)
+      .from("equipos")
+      .select("*");
+    return { props: { data } };
+  },
+});
