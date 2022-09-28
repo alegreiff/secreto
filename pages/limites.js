@@ -4,7 +4,7 @@ import { es } from "date-fns/locale";
 import Plantilla from "../components/layout/MainLayout";
 import useDatosPolla from "../store/datospolla";
 
-export default function LimitesPage() {
+export default function LimitesPage({ servertime }) {
   const { fechas } = useDatosPolla((state) => state);
   const lafecha = new Date();
   const lafechaformat = format(new Date(), "cccc MMM dd H':'mm a", {
@@ -12,7 +12,7 @@ export default function LimitesPage() {
   });
   //console.log(parseISO("2014-02-11T11:30:30"));
   //console.log(parseISO("2022-11-21T16:00"));
-  const tardemiercoles = "2022-09-28 23:38:00+00";
+  const tardemiercoles = "2022-09-28 23:44:00+00";
   const fechacompara = new Date(tardemiercoles);
 
   if (fechacompara.getTime() > lafecha.getTime()) {
@@ -42,13 +42,17 @@ export default function LimitesPage() {
   return (
     <Plantilla>
       <h2>Límites</h2>
+      <Box bg="yellow" w="100%" p={4} color="red">
+        <h2>HOY</h2>
+        {JSON.stringify(servertime)}
+      </Box>
       <Box bg="blue" w="100%" p={4} color="white">
         <h2>HOY</h2>
-        {JSON.stringify(lafecha.getTime())}
+        {JSON.stringify(lafecha)}
       </Box>
       <Box bg="crimson" w="100%" p={4} color="white">
         <h2>COMPARA</h2>
-        {JSON.stringify(fechacompara.getTime())}
+        {JSON.stringify(fechacompara)}
       </Box>
       <Box bg="green" w="100%" p={4} color="white">
         {fechacompara.getTime() > lafecha.getTime()
@@ -198,4 +202,11 @@ export default function LimitesPage() {
       <p>*****</p>
     </Plantilla>
   );
+}
+
+export async function getServerSideProps(context) {
+  const servertime = new Date();
+  return {
+    props: { servertime }, // will be passed to the page component as props
+  };
 }
