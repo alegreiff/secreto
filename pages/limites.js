@@ -7,12 +7,18 @@ import useDatosPolla from "../store/datospolla";
 export default function LimitesPage() {
   const { fechas } = useDatosPolla((state) => state);
   const lafecha = new Date();
+  const lafechaformat = format(new Date(), "cccc MMM dd H':'mm a", {
+    locale: es,
+  });
   console.log(parseISO("2014-02-11T11:30:30"));
   console.log(parseISO("2022-11-21T16:00"));
   //console.log(fechas.HOY);
   const muestraLimite = (nombre = "FASE", fecha) => {
     //console.log(fecha);
     if (fechas) {
+      const time = "2019-10-25T08:10:00Z";
+
+      const parsedTime = parseISO(new Date(time));
       //const formattedTime = format(parsedTime, "yyyy-MM-dd kk:mm:ss");
       //console.log(formattedTime);
       //console.log(parsedTime);
@@ -35,8 +41,13 @@ export default function LimitesPage() {
   return (
     <Plantilla>
       <h2>Límites</h2>
+      <Box bg="blue" w="100%" p={4} color="white">
+        {JSON.stringify(lafecha)}
+      </Box>
+      <Box bg="crimson" w="100%" p={4} color="white">
+        {JSON.stringify(lafechaformat)}
+      </Box>
 
-      <h6>Señal de prueba</h6>
       <Box
         bg="tomato"
         w="100%"
