@@ -15,6 +15,16 @@ export default function LimitesPage() {
   //console.log(fechas.HOY);
   const muestraLimite = (nombre = "FASE", fecha) => {
     //console.log(fecha);
+
+    const tardemiercoles = "2022-09-18 23:12:00+00";
+    const fechacompara = new Date(tardemiercoles);
+
+    if (fechacompara > lafecha) {
+      console.log("ES MAYOR LA ARBITRARIA QUE LA ACTUAL");
+    } else {
+      console.log("ES MENOR");
+    }
+
     if (fechas) {
       const time = "2019-10-25T08:10:00Z";
 
