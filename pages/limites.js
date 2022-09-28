@@ -10,20 +10,20 @@ export default function LimitesPage() {
   const lafechaformat = format(new Date(), "cccc MMM dd H':'mm a", {
     locale: es,
   });
-  console.log(parseISO("2014-02-11T11:30:30"));
-  console.log(parseISO("2022-11-21T16:00"));
+  //console.log(parseISO("2014-02-11T11:30:30"));
+  //console.log(parseISO("2022-11-21T16:00"));
+  const tardemiercoles = "2022-09-18 23:21:00+00";
+  const fechacompara = new Date(tardemiercoles);
+
+  if (fechacompara > lafecha) {
+    console.log("ES MAYOR LA ARBITRARIA QUE LA ACTUAL");
+  } else {
+    console.log("ES MENOR");
+  }
+
   //console.log(fechas.HOY);
   const muestraLimite = (nombre = "FASE", fecha) => {
     //console.log(fecha);
-
-    const tardemiercoles = "2022-09-18 23:12:00+00";
-    const fechacompara = new Date(tardemiercoles);
-
-    if (fechacompara > lafecha) {
-      console.log("ES MAYOR LA ARBITRARIA QUE LA ACTUAL");
-    } else {
-      console.log("ES MENOR");
-    }
 
     if (fechas) {
       const time = "2019-10-25T08:10:00Z";
@@ -52,10 +52,15 @@ export default function LimitesPage() {
     <Plantilla>
       <h2>Límites</h2>
       <Box bg="blue" w="100%" p={4} color="white">
+        <h2>HOY</h2>
         {JSON.stringify(lafecha)}
       </Box>
       <Box bg="crimson" w="100%" p={4} color="white">
-        {JSON.stringify(lafechaformat)}
+        <h2>COMPARA</h2>
+        {JSON.stringify(fechacompara)}
+      </Box>
+      <Box bg="green" w="100%" p={4} color="white">
+        {fechacompara > lafecha ? "ES MAYOR" : "ES MENOR"}
       </Box>
 
       <Box
