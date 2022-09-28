@@ -13,9 +13,6 @@ export default function LimitesPage() {
   const muestraLimite = (nombre = "FASE", fecha) => {
     //console.log(fecha);
     if (fechas) {
-      const time = "2019-10-25T08:10:00Z";
-
-      const parsedTime = parseISO(new Date(time));
       //const formattedTime = format(parsedTime, "yyyy-MM-dd kk:mm:ss");
       //console.log(formattedTime);
       //console.log(parsedTime);
@@ -38,8 +35,8 @@ export default function LimitesPage() {
   return (
     <Plantilla>
       <h2>Límites</h2>
-      {JSON.stringify(lafecha)}
-      <h6>Va cablgando...</h6>
+
+      <h6>Señal de prueba</h6>
       <Box
         bg="tomato"
         w="100%"
