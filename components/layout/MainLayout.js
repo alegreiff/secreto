@@ -65,6 +65,9 @@ export default function Plantilla({ children }) {
               <NextLink href="/polla" passHref>
                 <Link>Polla</Link>
               </NextLink>
+              <NextLink href="/limites" passHref>
+                <Link>Límites</Link>
+              </NextLink>
               <NextLink href="/partidos" passHref>
                 <Link>partidos</Link>
               </NextLink>

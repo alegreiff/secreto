@@ -1,8 +1,11 @@
+import { Button } from "@chakra-ui/react";
 import {
   getUser,
   supabaseServerClient,
   supabaseClient,
 } from "@supabase/auth-helpers-nextjs";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 
 //import { useUser } from "@supabase/auth-helpers-react";
 import Head from "next/head";
@@ -16,22 +19,22 @@ import styles from "../styles/Home.module.css";
 export default function Home({ user, db_partidos }) {
   const partidos = useDatosPolla((state) => state.partidos);
   const setPartidos = useDatosPolla((state) => state.setPartidos);
+  const { fechas, registro } = useDatosPolla((state) => state);
 
   useEffect(() => {
     async function cargaPartidos() {
-      console.log("Cargando matche's");
+      //console.log("Cargando matche's");
       const { data: db_partidos } = await supabaseClient
         .from("partidospower")
         .select("*");
-      //.lt("ronda", 4)
-      //.eq("ronda", 5)
-      //.order("id");
 
-      /* const partidos = db_partidos.map((elem) => ({
-        ...elem,
-        power: Math.round(elem.LOC.rank + elem.VIS.rank),
-      })); */
       setPartidos(db_partidos);
+      /* console.log(
+        "INTERNA",
+        format(new Date(db_partidos[7].fecha), "cccc MMM dd H':'mm a", {
+          locale: es,
+        })
+      ); */
     }
 
     if (partidos.length === 0) {
@@ -39,8 +42,35 @@ export default function Home({ user, db_partidos }) {
     }
   }, []);
 
-  console.log("PRT", partidos[7]);
-  //const { user, error } = useUser();
+  const clearLocalStorage = () => {
+    localStorage.clear();
+  };
+
+  console.log(
+    "INICIO GRUPOS",
+    format(new Date(fechas.INICIO_GRUPOS), "cccc MMM dd H':'mm a", {
+      locale: es,
+    })
+  );
+  console.log(
+    "FIN GRUPOS",
+    format(new Date(fechas.FIN_GRUPOS), "cccc MMM dd H':'mm a", { locale: es })
+  );
+
+  /* if (fechas.HOY) {
+    console.log(
+      "SETTINGS",
+      format(new Date(fechas.HOY), "cccc MMM dd H':'mm a", { locale: es })
+    );
+  } */
+
+  /* 
+  
+  const dia = format(date, "cccc", { locale: es });
+  const fecha = format(date, "MMM dd", { locale: es });
+  const hora = format(date, "H':'mm a");
+ 
+  */
 
   return (
     <div className={styles.container}>
@@ -50,6 +80,7 @@ export default function Home({ user, db_partidos }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Plantilla>
+        <Button onClick={clearLocalStorage}> Limpia storage </Button>
         <main className={styles.main}>
           <h1 className={styles.title}>
             RRSS Hagámoslo juntos <a href="https://nextjs.org">Next.js!</a>

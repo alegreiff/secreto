@@ -22,7 +22,8 @@ import useDatosPolla from "../store/datospolla";
 
 export default function Partidos() {
   //const { _pa: datos } = useAppContext();
-  const datos = useDatosPolla((state) => state.partidos);
+  //const datos = useDatosPolla((state) => state.partidos);
+  const { partidos: datos, registro } = useDatosPolla((state) => state);
 
   const losdatos = useMemo(() => datos, [datos]);
 
@@ -133,6 +134,7 @@ export default function Partidos() {
 
   return (
     <Plantilla>
+      <h5> {registro ? "Se puede" : "Pailas"} </h5>
       <Table {...getTableProps()}>
         <Thead>
           {headerGroups.map((headerGroup, ii) => (
