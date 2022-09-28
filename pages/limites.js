@@ -39,6 +39,7 @@ export default function LimitesPage() {
     <Plantilla>
       <h2>Límites</h2>
       {JSON.stringify(lafecha)}
+      <h6>Va cablgando...</h6>
       <Box
         bg="tomato"
         w="100%"
