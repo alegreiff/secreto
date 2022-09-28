@@ -1,7 +1,5 @@
 import create from "zustand";
 import { persist } from "zustand/middleware";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
 
 const useDatosPolla = create(
   persist(

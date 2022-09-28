@@ -1,14 +1,28 @@
 import { Box } from "@chakra-ui/react";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import Plantilla from "../components/layout/MainLayout";
 import useDatosPolla from "../store/datospolla";
 
 export default function LimitesPage() {
   const { fechas } = useDatosPolla((state) => state);
-  console.log(fechas.HOY);
+  const lafecha = new Date();
+  console.log(parseISO("2014-02-11T11:30:30"));
+  console.log(parseISO("2022-11-21T16:00"));
+  //console.log(fechas.HOY);
   const muestraLimite = (nombre = "FASE", fecha) => {
     //console.log(fecha);
+    if (fechas) {
+      const time = "2019-10-25T08:10:00Z";
+
+      const parsedTime = parseISO(new Date(time));
+      //const formattedTime = format(parsedTime, "yyyy-MM-dd kk:mm:ss");
+      //console.log(formattedTime);
+      //console.log(parsedTime);
+    }
+
+    //const formattedTime = format(ini_grupos, "yyyy-MM-dd kk:mm:ss");
+
     return (
       "<h4>" +
       nombre +
@@ -24,6 +38,7 @@ export default function LimitesPage() {
   return (
     <Plantilla>
       <h2>Límites</h2>
+      {JSON.stringify(lafecha)}
       <Box
         bg="tomato"
         w="100%"
