@@ -12,30 +12,21 @@ export default function LimitesPage() {
   });
   //console.log(parseISO("2014-02-11T11:30:30"));
   //console.log(parseISO("2022-11-21T16:00"));
-  const tardemiercoles = "2022-09-18 23:21:00+00";
+  const tardemiercoles = "2022-09-28 23:38:00+00";
   const fechacompara = new Date(tardemiercoles);
 
-  if (fechacompara > lafecha) {
+  if (fechacompara.getTime() > lafecha.getTime()) {
     console.log("ES MAYOR LA ARBITRARIA QUE LA ACTUAL");
   } else {
-    console.log("ES MENOR");
+    console.log(
+      "ES MENOR",
+      lafecha.getTime() - fechacompara.getTime(),
+      fechacompara.getTime() - lafecha.getTime()
+    );
   }
 
   //console.log(fechas.HOY);
   const muestraLimite = (nombre = "FASE", fecha) => {
-    //console.log(fecha);
-
-    if (fechas) {
-      const time = "2019-10-25T08:10:00Z";
-
-      const parsedTime = parseISO(new Date(time));
-      //const formattedTime = format(parsedTime, "yyyy-MM-dd kk:mm:ss");
-      //console.log(formattedTime);
-      //console.log(parsedTime);
-    }
-
-    //const formattedTime = format(ini_grupos, "yyyy-MM-dd kk:mm:ss");
-
     return (
       "<h4>" +
       nombre +
@@ -53,14 +44,16 @@ export default function LimitesPage() {
       <h2>Límites</h2>
       <Box bg="blue" w="100%" p={4} color="white">
         <h2>HOY</h2>
-        {JSON.stringify(lafecha)}
+        {JSON.stringify(lafecha.getTime())}
       </Box>
       <Box bg="crimson" w="100%" p={4} color="white">
         <h2>COMPARA</h2>
-        {JSON.stringify(fechacompara)}
+        {JSON.stringify(fechacompara.getTime())}
       </Box>
       <Box bg="green" w="100%" p={4} color="white">
-        {fechacompara > lafecha ? "ES MAYOR" : "ES MENOR"}
+        {fechacompara.getTime() > lafecha.getTime()
+          ? "ES MAYOR"
+          : "HOY ES MENOR"}
       </Box>
 
       <Box
