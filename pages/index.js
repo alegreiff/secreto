@@ -1,12 +1,45 @@
-import { getUser } from "@supabase/auth-helpers-nextjs";
+import {
+  getUser,
+  supabaseServerClient,
+  supabaseClient,
+} from "@supabase/auth-helpers-nextjs";
+
 //import { useUser } from "@supabase/auth-helpers-react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 import Plantilla from "../components/layout/MainLayout";
+import useDatosPolla from "../store/datospolla";
 import styles from "../styles/Home.module.css";
 
-export default function Home({ user }) {
+export default function Home({ user, db_partidos }) {
+  const partidos = useDatosPolla((state) => state.partidos);
+  const setPartidos = useDatosPolla((state) => state.setPartidos);
+
+  useEffect(() => {
+    async function cargaPartidos() {
+      console.log("Cargando matche's");
+      const { data: db_partidos } = await supabaseClient
+        .from("partidospower")
+        .select("*");
+      //.lt("ronda", 4)
+      //.eq("ronda", 5)
+      //.order("id");
+
+      /* const partidos = db_partidos.map((elem) => ({
+        ...elem,
+        power: Math.round(elem.LOC.rank + elem.VIS.rank),
+      })); */
+      setPartidos(db_partidos);
+    }
+
+    if (partidos.length === 0) {
+      cargaPartidos();
+    }
+  }, []);
+
+  console.log("PRT", partidos[7]);
   //const { user, error } = useUser();
 
   return (
