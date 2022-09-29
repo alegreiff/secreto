@@ -2,16 +2,15 @@ import { Box } from "@chakra-ui/react";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import Plantilla from "../components/layout/MainLayout";
-import useDatosPolla from "../store/datospolla";
+import useDatosVivos from "../store/datosFlash";
 
 export default function LimitesPage({ servertime }) {
-  const { fechas } = useDatosPolla((state) => state);
+  const { fechas } = useDatosVivos((state) => state);
   const lafecha = new Date();
   const lafechaformat = format(new Date(), "cccc MMM dd H':'mm a", {
     locale: es,
   });
-  //console.log(parseISO("2014-02-11T11:30:30"));
-  //console.log(parseISO("2022-11-21T16:00"));
+
   const tardemiercoles = "2022-09-28 23:44:00+00";
   const fechacompara = new Date(tardemiercoles);
 
@@ -42,23 +41,6 @@ export default function LimitesPage({ servertime }) {
   return (
     <Plantilla>
       <h2>Límites</h2>
-      <Box bg="yellow" w="100%" p={4} color="red">
-        <h2>HOY</h2>
-        {JSON.stringify(servertime)}
-      </Box>
-      <Box bg="blue" w="100%" p={4} color="white">
-        <h2>HOY</h2>
-        {JSON.stringify(lafecha)}
-      </Box>
-      <Box bg="crimson" w="100%" p={4} color="white">
-        <h2>COMPARA</h2>
-        {JSON.stringify(fechacompara)}
-      </Box>
-      <Box bg="green" w="100%" p={4} color="white">
-        {fechacompara.getTime() > lafecha.getTime()
-          ? "ES MAYOR"
-          : "HOY ES MENOR"}
-      </Box>
 
       <Box
         bg="tomato"
@@ -205,7 +187,8 @@ export default function LimitesPage({ servertime }) {
 }
 
 export async function getServerSideProps(context) {
-  const servertime = new Date();
+  const servertime = new Date().toJSON();
+  console.log(servertime);
   return {
     props: { servertime }, // will be passed to the page component as props
   };

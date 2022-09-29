@@ -22,7 +22,7 @@ const LoginPage = () => {
 
   const handleLogout = () => {
     supabaseClient.auth.signOut();
-    //router.push("/api/auth/logout");
+    router.push("/api/auth/logout");
     //console.log("Saliendo babi");
   };
 

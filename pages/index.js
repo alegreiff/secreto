@@ -13,13 +13,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 import Plantilla from "../components/layout/MainLayout";
+import useFase from "../hooks/useFase";
+import useDatosVivos from "../store/datosFlash";
 import useDatosPolla from "../store/datospolla";
 import styles from "../styles/Home.module.css";
 
 export default function Home({ user, db_partidos }) {
   const partidos = useDatosPolla((state) => state.partidos);
   const setPartidos = useDatosPolla((state) => state.setPartidos);
-  const { fechas, registro } = useDatosPolla((state) => state);
+
+  const { fechas, fase, setFase } = useDatosVivos((state) => state);
+  const tempo = useFase(fechas);
+  /* const HOYDIA = format(new Date(fechas.HOY), "cccc MMM dd H':'mm a", {
+    locale: es,
+  }); */
+  const HOYDIA = fechas.HOY;
 
   useEffect(() => {
     async function cargaPartidos() {
@@ -29,12 +37,6 @@ export default function Home({ user, db_partidos }) {
         .select("*");
 
       setPartidos(db_partidos);
-      /* console.log(
-        "INTERNA",
-        format(new Date(db_partidos[7].fecha), "cccc MMM dd H':'mm a", {
-          locale: es,
-        })
-      ); */
     }
 
     if (partidos.length === 0) {
@@ -46,32 +48,6 @@ export default function Home({ user, db_partidos }) {
     localStorage.clear();
   };
 
-  console.log(
-    "INICIO GRUPOS",
-    format(new Date(fechas.INICIO_GRUPOS), "cccc MMM dd H':'mm a", {
-      locale: es,
-    })
-  );
-  console.log(
-    "FIN GRUPOS",
-    format(new Date(fechas.FIN_GRUPOS), "cccc MMM dd H':'mm a", { locale: es })
-  );
-
-  /* if (fechas.HOY) {
-    console.log(
-      "SETTINGS",
-      format(new Date(fechas.HOY), "cccc MMM dd H':'mm a", { locale: es })
-    );
-  } */
-
-  /* 
-  
-  const dia = format(date, "cccc", { locale: es });
-  const fecha = format(date, "MMM dd", { locale: es });
-  const hora = format(date, "H':'mm a");
- 
-  */
-
   return (
     <div className={styles.container}>
       <Head>
@@ -82,8 +58,12 @@ export default function Home({ user, db_partidos }) {
       <Plantilla>
         <Button onClick={clearLocalStorage}> Limpia storage </Button>
         <main className={styles.main}>
+          <h2>{HOYDIA}</h2>
           <h1 className={styles.title}>
-            RRSS Hagámoslo juntos <a href="https://nextjs.org">Next.js!</a>
+            ETAPA{" "}
+            <a href="#">
+              {tempo[0]} - {tempo[1]} - {tempo[2] ? "ABIERTO" : "CERRADO"}
+            </a>
           </h1>
           <Link href="/login">Login</Link>-<Link href="/profile">Perfil</Link>
           <p className={styles.description}>
