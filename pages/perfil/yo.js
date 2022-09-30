@@ -8,7 +8,7 @@ import {
   Select,
   VStack,
 } from "@chakra-ui/react";
-import { useFormik } from "formik";
+import { Field, useFormik } from "formik";
 
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
@@ -19,13 +19,35 @@ import {
 } from "@supabase/auth-helpers-nextjs";
 import { useUser } from "@supabase/auth-helpers-react";
 import Plantilla from "../../components/layout/MainLayout";
+import { UploadAvatar } from "../../components/AvatarCustom";
 
 export default function Jefe({ equipos, favoritos }) {
   const [profile, setProfile] = useState(null);
+  const [imagen, setImagen] = useState("");
   const { user, error } = useUser();
-  console.log("FAVS", favoritos);
 
   useEffect(() => {
+    async function getImage(userid) {
+      const { data, error } = await supabaseClient.storage
+        .from("polleres")
+        .getPublicUrl("wefre/006.png");
+      /* .list("wefre", {
+          limit: 10,
+          offset: 0,
+          sortBy: { column: "name", order: "asc" },
+        }); */
+
+      //.getPublicUrl(`${userid}/perfil.jpg`);
+
+      console.log(data, error);
+      //
+
+      /* if (publicURL) {
+        setImagen(publicURL);
+        console.log(publicURL, error);
+        console.log("La imagen es", imagen);
+      } */
+    }
     async function loadPerfil() {
       const { data: profile, error } = await supabaseClient
         .from("usuarios")
@@ -38,21 +60,11 @@ export default function Jefe({ equipos, favoritos }) {
       }
     }
     // Only run query once user is logged in.
-    if (user) loadPerfil();
+    if (user) {
+      loadPerfil();
+      getImage(user?.id);
+    }
   }, [user]);
-
-  /* useEffect(() => {
-    carga();
-  }, []);
-
-  const carga = async () => {
-    const { data: profile, error } = await supabaseClient
-      .from("usuarios")
-      .select("*")
-      .eq("id", user?.id);
-    //.single();
-    console.log("DF", profile);
-  }; */
 
   const formik = useFormik({
     initialValues: {
@@ -60,6 +72,7 @@ export default function Jefe({ equipos, favoritos }) {
       polleroalias: profile?.alias ? profile.alias : "",
       userId: user?.id,
       favorito: profile?.favorito ? profile?.favorito : "",
+      pollerofoto: "",
       //userId: "jkio8",
     },
     enableReinitialize: true,
@@ -73,10 +86,32 @@ export default function Jefe({ equipos, favoritos }) {
       favorito: Yup.string().required("Seleccione su equipo más querido"),
     }),
     onSubmit: async (values, actions) => {
-      //console.log(JSON.stringify(values, null, 2));
-      console.log("OP", profile);
+      console.log(values.pollerofoto);
+      const tipo = values.pollerofoto.type.split("/").pop();
+      console.log("EXT", tipo);
 
-      const { data, error } = await supabaseClient
+      //console.log(JSON.stringify(values, null, 2));
+      //console.log("OP", profile);
+      /* const { data: dataElim, error: errorElim } = await supabaseClient.storage
+        .from("polleros")
+        .remove([`public/${user?.id}.jpg`]); */
+
+      //console.log("IMAGOS", values.pollerofoto);
+      //const { data, error } = await supabaseClient.storage.from("polleres");
+      //.listBuckets();
+      //.getBucket(`oppa`);
+
+      //.remove([`${user?.id}/perfil.png`]);
+      //.getBucket(`pollerows`);
+      //.move(`${user?.id}/perfil.jpg`, `${user?.id}/perfilXAS.jpg`);
+      /* .update(`${user?.id}/perfil.png`, values.pollerofoto, {
+          cacheControl: "3600",
+          upsert: false,
+        }); */
+      //console.log("SUBIDA", data);
+      //console.log("INSUBIDA", error);
+
+      /* const { data, error } = await supabaseClient
         .from("usuarios")
         .update({
           hincha: values.hinchade,
@@ -91,11 +126,19 @@ export default function Jefe({ equipos, favoritos }) {
       }
       if (error) {
         console.log(error);
-      }
+      } */
     },
   });
 
   /* 
+
+
+  "polleros/public/po055e5fa9-ffb7-46ed-842e-7c04b4192d5c.jpg"
+https://dsbiqexajjcyswddmxve.supabase.co/storage/v1/object/public/oppa/055e5fa9-ffb7-46ed-842e-7c04b4192d5c/perfil.jpg?t=2022-09-30T01%3A28%3A04.935Z
+
+  
+  UT https://dsbiqexajjcyswddmxve.supabase.co/storage/v1/object/polleros/public/po055e5fa9-ffb7-46ed-842e-7c04b4192d5c.jpg 400
+     https://dsbiqexajjcyswddmxve.supabase.co/storage/v1/object/public/polleros/public/055e5fa9-ffb7-46ed-842e-7c04b4192d5c.jpg
   
 const { data, error } = await supabase
   .from('usuarios')
@@ -110,6 +153,9 @@ const { data, error } = await supabase
 
   return (
     <Plantilla>
+      <VStack>
+        <UploadAvatar />
+      </VStack>
       <VStack
         as="form"
         justifyContent="center"
@@ -178,6 +224,17 @@ const { data, error } = await supabase
             disabled
           ></Input>
         </FormControl>
+        <FormControl>
+          <Input
+            type="file"
+            name="pollerofoto"
+            onChange={(event) => {
+              const files = event.target.files;
+              let myFiles = Array.from(files);
+              formik.setFieldValue("pollerofoto", myFiles[0]);
+            }}
+          />
+        </FormControl>
         <Button type="submit" variant="outline" colorScheme="teal">
           Guardar perfil
         </Button>
@@ -204,31 +261,3 @@ export const getServerSideProps = withPageAuth({
     return { props: { equipos, favoritos } };
   },
 });
-
-/* export async function getServerSideProps({ req }) {
-  const { user } = await supabase.auth.api.getUserByCookie(req);
-  if (!user) {
-    return { props: {}, redirect: { destination: "/" } };
-  }
-  const { data: profile, error } = await supabase
-    .from("usuarios")
-    .select("id")
-    .eq("id", user.id)
-    .single();
-  console.log("perfil", user.id, profile);
-  const perfil = profile;
-
-  if (error) {
-    console.log("ERROR", error);
-  }
-
-  return { props: { user, perfil } };
-} */
-
-/* 
-[{"id":"5a47d784-6ea8-4864-9ecf-22b2f07a0e83","created_at":"2022-09-22T01:30:23+00:00","username":"Ja Y me","correo":"a.legreiff@gmail.com","isPollero":true,"favorito":2,"hincha":"Independiente Santa Fe","isPagado":false,"alias":"Jardinero"}]
-5a47d784-6ea8-4864-9ecf-22b2f07a0e83
-5a47d784-6ea8-4864-9ecf-22b2f07a0e83
-
-
-*/

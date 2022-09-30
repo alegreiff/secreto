@@ -58,9 +58,14 @@ export default function Home({ user, db_partidos }) {
       <Plantilla>
         <Button onClick={clearLocalStorage}> Limpia storage </Button>
         <main className={styles.main}>
-          <h2>{HOYDIA}</h2>
+          <Image
+            src="https://dsbiqexajjcyswddmxve.supabase.co/storage/v1/object/public/polleros/055e5fa9-ffb7-46ed-842e-7c04b4192d5c/perfil.jpg"
+            alt="pollero"
+            width="200"
+            height="145"
+          ></Image>
           <h1 className={styles.title}>
-            ETAPA{" "}
+            ETAPA
             <a href="#">
               {tempo[0]} - {tempo[1]} - {tempo[2] ? "ABIERTO" : "CERRADO"}
             </a>

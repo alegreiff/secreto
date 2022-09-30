@@ -11,8 +11,9 @@ const useDatosVivos = create((set, get) => ({
   /* EN LA CONFIGURACIÓN VAN LAS FECHAS CON HORA COLOMBIA + CINCO */
   fechas: {
     //HOY: new Date("2022-11-21 19:00"),
-    //HOY: format(new Date(), "yyyy-MM-dd H':'mm':'ss'+00'"),
+
     HOY: "2022-11-29 16:00:00+00",
+    HOY: format(new Date(), "yyyy-MM-dd H':'mm':'ss'+00'"),
     INICIO_GRUPOS: "2022-11-21 16:00:00+00",
     FIN_GRUPOS: "2022-12-02 22:00:00+00",
     INICIO_OCTAVOS: "2022-12-03 15:00:00+00",

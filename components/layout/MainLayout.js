@@ -71,7 +71,7 @@ export default function Plantilla({ children }) {
               <NextLink href="/partidos" passHref>
                 <Link>partidos</Link>
               </NextLink>
-              <NextLink href="/perfil/test" passHref>
+              <NextLink href="/perfil/yo" passHref>
                 <Link>test profile</Link>
               </NextLink>
             </HStack>
