@@ -9,7 +9,7 @@ import {
   Select,
   VStack,
 } from "@chakra-ui/react";
-import { Field, useFormik } from "formik";
+import { useFormik } from "formik";
 
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
@@ -23,7 +23,7 @@ import Plantilla from "../../components/layout/MainLayout";
 import { UploadAvatar } from "../../components/AvatarCustom";
 import useDatosPolla from "../../store/datospolla";
 
-export default function Jefe({ equipos, favoritos }) {
+export default function PerfilUpdate({ equipos, favoritos }) {
   const [profile, setProfile] = useState(null);
   const [imagen, setImagen] = useState(null);
   const { user, error } = useUser();
@@ -36,6 +36,22 @@ export default function Jefe({ equipos, favoritos }) {
   };
   useEffect(() => {
     async function getImage(userid) {
+      /* const { data: list, error: err1 } = await supabaseClient.storage
+        .from("polleres")
+        .list(`${userid}`);
+      const filesToRemove = list.map((x) => `${userid}/${x.name}`);
+
+      const { data: dt1, error: err2 } = await supabaseClient.storage
+        .from("polleres")
+        .remove(filesToRemove); */
+      /**FIN ELIMINAR */
+
+      /* const { data: dx, error: ex } = await supabaseClient.storage
+        .from("polleres")
+        .remove([`${userid}/33661.png`]);
+
+      console.log("BORRA", dx, ex); */
+
       const ruta = `${userid}/perfil.png`;
       const { data, error } = await supabaseClient.storage
         .from("polleres")

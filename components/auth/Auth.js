@@ -42,16 +42,25 @@ const Auth = ({ setUser }) => {
   };
 
   const signInWithGoogle = async () => {
-    console.log("Google Your");
+    const { user, session, error } = await supabase.auth.signIn({
+      // provider can be 'github', 'google', 'gitlab', and more
+      provider: "google",
+    });
+    if (user) {
+      console.log("DESDE GOOGLE AUTH EL USER", user, session);
+
+      router.push("/polla");
+    }
+    /* console.log("Google Your");
     const rutaRedireccion = window.location.origin + "/polla/";
-    const { user, session, error } = await supabase.auth.signIn(
-      {
-        provider: "google",
-      },
-      {
-        redirectTo: rutaRedireccion,
-      }
-    );
+    const { user, session, error } = await supabase.auth.signIn({
+      provider: "google",
+    });
+    if (user) {
+      console.log("DESDE GOOGLE AUTH EL USER", user);
+
+      router.push("/polla");
+    } */
   };
 
   const signInWithGitHub = async () => {
@@ -74,8 +83,19 @@ const Auth = ({ setUser }) => {
   const changeForm = () => {
     setIsSignUp((value) => !value);
   };
-
   const handleSignIn = async () => {
+    const { user, session, error } = await supabase.auth.signIn({
+      email,
+      password,
+    });
+    if (user) {
+      console.log("DESDE AUTH EL USER", user);
+
+      router.push("/polla");
+    }
+  };
+
+  /* const handleSignIn = async () => {
     const rutaRedireccion = window.location.origin + "/polla/";
     console.log("ROUTE", rutaRedireccion);
     try {
@@ -85,8 +105,9 @@ const Auth = ({ setUser }) => {
       });
       if (error) throw error;
       if (user) {
+        console.log("DESDE AUTH EL USER", user);
         //setUser(user);
-        router.push("/polla");
+        //router.push("/polla");
       }
       Swal.fire({
         title: "Bienvenido",
@@ -98,7 +119,7 @@ const Auth = ({ setUser }) => {
         text: error.message,
       });
     }
-  };
+  }; */
 
   const handleSignUp = async () => {
     const check = await checkEmail(email);

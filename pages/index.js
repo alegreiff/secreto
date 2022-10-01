@@ -12,13 +12,20 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
+import useSWR from "swr";
 import Plantilla from "../components/layout/MainLayout";
 import useFase from "../hooks/useFase";
 import useDatosVivos from "../store/datosFlash";
 import useDatosPolla from "../store/datospolla";
 import styles from "../styles/Home.module.css";
+import { fetcher } from "../utils/fetcher";
 
 export default function Home({ user, db_partidos }) {
+  const { data: userdata, error: usererror } = useSWR(
+    "/api/auth/user",
+    fetcher
+  );
+
   const partidos = useDatosPolla((state) => state.partidos);
   const setPartidos = useDatosPolla((state) => state.setPartidos);
 
@@ -56,6 +63,7 @@ export default function Home({ user, db_partidos }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Plantilla>
+        {/* {JSON.stringify(user)} */}
         <Button onClick={clearLocalStorage}> Limpia storage </Button>
         <main className={styles.main}>
           <h1 className={styles.title}>
@@ -69,15 +77,16 @@ export default function Home({ user, db_partidos }) {
             Get started by editing{" "}
             <code className={styles.code}>pages/index.js</code>
           </p>
-          {user && user?.email}
+          {userdata && userdata?.user?.email}
         </main>
       </Plantilla>
     </>
   );
 }
 
-export async function getServerSideProps(ctx) {
+/* export async function getServerSideProps(ctx) {
   const { user } = await getUser(ctx);
+  console.log("USER", user);
 
   return { props: { user } };
-}
+} */
