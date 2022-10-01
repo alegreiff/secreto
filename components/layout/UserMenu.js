@@ -13,11 +13,10 @@ import {
 import useDatosPolla from "../../store/datospolla";
 
 const UserMenu = ({ user }) => {
+  console.log("PP Mn");
   const { fotoperfil } = useDatosPolla((state) => state);
-  const imagenPerfil = "";
-  if (fotoperfil) {
-    imagenPerfil = `https://dsbiqexajjcyswddmxve.supabase.co/storage/v1/object/public/polleres/${user?.id}/perfil.png`;
-  }
+  const imagenPerfil = `https://dsbiqexajjcyswddmxve.supabase.co/storage/v1/object/public/polleres/${user?.id}/perfil.png?i=6`;
+
   return (
     <HStack>
       {/* <Button onClick={handleLogout}> Salir </Button> */}
@@ -32,7 +31,7 @@ const UserMenu = ({ user }) => {
           cursor={"pointer"}
           minW={0}
         >
-          <Avatar size={"md"} src={imagenPerfil} />
+          {fotoperfil ? <Avatar size={"md"} src={imagenPerfil} /> : ""}
         </MenuButton>
         <MenuList>
           <span> {user?.email} lokoo</span>

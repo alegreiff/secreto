@@ -108,7 +108,7 @@ export default function Jefe({ equipos, favoritos }) {
         const { data, error } = await supabaseClient.storage
           .from("polleres")
           .upload(`${user?.id}/perfil.png`, nuevaIMG, {
-            cacheControl: "0",
+            cacheControl: "3600",
             upsert: false,
           });
         if (data) {
@@ -120,7 +120,7 @@ export default function Jefe({ equipos, favoritos }) {
         const { data, error } = await supabaseClient.storage
           .from("polleres")
           .update(`${user?.id}/perfil.png`, nuevaIMG, {
-            cacheControl: "0",
+            cacheControl: "3600",
             upsert: false,
           });
         if (data) {
