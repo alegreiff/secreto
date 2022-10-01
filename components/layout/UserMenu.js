@@ -10,8 +10,14 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
+import useDatosPolla from "../../store/datospolla";
 
 const UserMenu = ({ user }) => {
+  const { fotoperfil } = useDatosPolla((state) => state);
+  const imagenPerfil = "";
+  if (fotoperfil) {
+    imagenPerfil = `https://dsbiqexajjcyswddmxve.supabase.co/storage/v1/object/public/polleres/${user?.id}/perfil.png`;
+  }
   return (
     <HStack>
       {/* <Button onClick={handleLogout}> Salir </Button> */}
@@ -26,12 +32,7 @@ const UserMenu = ({ user }) => {
           cursor={"pointer"}
           minW={0}
         >
-          <Avatar
-            size={"sm"}
-            src={
-              "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-            }
-          />
+          <Avatar size={"md"} src={imagenPerfil} />
         </MenuButton>
         <MenuList>
           <span> {user?.email} lokoo</span>

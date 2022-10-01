@@ -21,6 +21,7 @@ import {
 import { useUser } from "@supabase/auth-helpers-react";
 import Plantilla from "../../components/layout/MainLayout";
 import { UploadAvatar } from "../../components/AvatarCustom";
+import useDatosPolla from "../../store/datospolla";
 
 export default function Jefe({ equipos, favoritos }) {
   const [profile, setProfile] = useState(null);
@@ -29,7 +30,7 @@ export default function Jefe({ equipos, favoritos }) {
   const [upload, setUpload] = useState(true);
   const [nuevaIMG, setnuevaIMG] = useState(null);
   const [random, setRandom] = useState(Math.random);
-
+  const { setFotoPerfil } = useDatosPolla((state) => state);
   const cambiaImagos = (datos) => {
     setImagen(datos);
   };
@@ -38,18 +39,10 @@ export default function Jefe({ equipos, favoritos }) {
       const ruta = `${userid}/perfil.png`;
       const { data, error } = await supabaseClient.storage
         .from("polleres")
-        //.download("wefre/002.png");
         .download(ruta);
-      /* .list("wefre", {
-          limit: 10,
-          offset: 0,
-          sortBy: { column: "name", order: "asc" },
-        }); */
-
-      //.getPublicUrl(`${userid}/perfil.jpg`);
-
       if (data) {
         console.log("PREVIMAGOS", data);
+        setFotoPerfil();
         const { publicURL, error } = supabaseClient.storage
           .from("polleres")
           .getPublicUrl(ruta);
@@ -180,23 +173,6 @@ export default function Jefe({ equipos, favoritos }) {
     },
   });
 
-  /* 
-
-
-  "polleros/public/po055e5fa9-ffb7-46ed-842e-7c04b4192d5c.jpg"
-https://dsbiqexajjcyswddmxve.supabase.co/storage/v1/object/public/oppa/055e5fa9-ffb7-46ed-842e-7c04b4192d5c/perfil.jpg?t=2022-09-30T01%3A28%3A04.935Z
-
-  
-  UT https://dsbiqexajjcyswddmxve.supabase.co/storage/v1/object/polleros/public/po055e5fa9-ffb7-46ed-842e-7c04b4192d5c.jpg 400
-     https://dsbiqexajjcyswddmxve.supabase.co/storage/v1/object/public/polleros/public/055e5fa9-ffb7-46ed-842e-7c04b4192d5c.jpg
-  
-const { data, error } = await supabase
-  .from('usuarios')
-  .update({ other_column: 'otherValue' })
-  .eq('some_column', 'someValue')
-
-  */
-
   const updateProfile = async (values) => {
     return data;
   };
@@ -278,17 +254,7 @@ const { data, error } = await supabase
           setImagen={setImagen}
           setnuevaIMG={setnuevaIMG}
         />
-        <FormControl>
-          <Input
-            type="file"
-            name="pollerofoto"
-            onChange={(event) => {
-              const files = event.target.files;
-              let myFiles = Array.from(files);
-              formik.setFieldValue("pollerofoto", myFiles[0]);
-            }}
-          />
-        </FormControl>
+
         <Button type="submit" variant="outline" colorScheme="teal">
           Guardar perfil
         </Button>
@@ -310,7 +276,8 @@ export const getServerSideProps = withPageAuth({
       );
     const { data: favoritos } = await supabaseServerClient(ctx)
       .from("equipos")
-      .select("id, nombre");
+      .select("id, nombre")
+      .order("nombre");
 
     return { props: { equipos, favoritos } };
   },

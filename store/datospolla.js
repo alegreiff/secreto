@@ -10,6 +10,12 @@ const useDatosPolla = create(
           partidos: params,
         }));
       },
+      fotoperfil: false,
+      setFotoPerfil: () => {
+        set((state) => ({
+          fotoperfil: true,
+        }));
+      },
 
       total: 0,
       totalqty: 0,
