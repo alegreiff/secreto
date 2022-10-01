@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Heading,
+  Image,
   Input,
   Select,
   VStack,
@@ -23,14 +24,22 @@ import { UploadAvatar } from "../../components/AvatarCustom";
 
 export default function Jefe({ equipos, favoritos }) {
   const [profile, setProfile] = useState(null);
-  const [imagen, setImagen] = useState("");
+  const [imagen, setImagen] = useState(null);
   const { user, error } = useUser();
+  const [upload, setUpload] = useState(true);
+  const [nuevaIMG, setnuevaIMG] = useState(null);
+  const [random, setRandom] = useState(Math.random);
 
+  const cambiaImagos = (datos) => {
+    setImagen(datos);
+  };
   useEffect(() => {
     async function getImage(userid) {
+      const ruta = `${userid}/perfil.png`;
       const { data, error } = await supabaseClient.storage
         .from("polleres")
-        .getPublicUrl("wefre/006.png");
+        //.download("wefre/002.png");
+        .download(ruta);
       /* .list("wefre", {
           limit: 10,
           offset: 0,
@@ -39,7 +48,23 @@ export default function Jefe({ equipos, favoritos }) {
 
       //.getPublicUrl(`${userid}/perfil.jpg`);
 
-      console.log(data, error);
+      if (data) {
+        console.log("PREVIMAGOS", data);
+        const { publicURL, error } = supabaseClient.storage
+          .from("polleres")
+          .getPublicUrl(ruta);
+        if (publicURL) {
+          //console.log(publicURL);
+          setImagen(publicURL + "?poll=" + random);
+          setUpload(false);
+        }
+      } else {
+        console.log("NOTIMAGOS", error);
+      }
+      //setImagen(publicURL);
+      //console.log(publicURL, error);
+      //console.log("La imagen es", imagen);
+
       //
 
       /* if (publicURL) {
@@ -86,9 +111,51 @@ export default function Jefe({ equipos, favoritos }) {
       favorito: Yup.string().required("Seleccione su equipo más querido"),
     }),
     onSubmit: async (values, actions) => {
-      console.log(values.pollerofoto);
-      const tipo = values.pollerofoto.type.split("/").pop();
-      console.log("EXT", tipo);
+      if (upload) {
+        const { data, error } = await supabaseClient.storage
+          .from("polleres")
+          .upload(`${user?.id}/perfil.png`, nuevaIMG, {
+            cacheControl: "0",
+            upsert: false,
+          });
+        if (data) {
+          setUpload(false);
+          setRandom(Math.random);
+        }
+        console.log(data, error);
+      } else {
+        const { data, error } = await supabaseClient.storage
+          .from("polleres")
+          .update(`${user?.id}/perfil.png`, nuevaIMG, {
+            cacheControl: "0",
+            upsert: false,
+          });
+        if (data) {
+          setRandom(Math.random);
+        }
+        console.log(data, error);
+      }
+
+      const { data, error } = await supabaseClient
+        .from("usuarios")
+        .update({
+          hincha: values.hinchade,
+          alias: values.polleroalias,
+          favorito: values.favorito,
+        })
+        .eq("id", user?.id)
+        .single();
+      if (data) {
+        setProfile(data);
+        //actions.resetForm();
+      }
+      if (error) {
+        console.log(error);
+      }
+
+      //console.log(values.pollerofoto);
+      //const tipo = values.pollerofoto.type.split("/").pop();
+      //console.log("EXT", tipo);
 
       //console.log(JSON.stringify(values, null, 2));
       //console.log("OP", profile);
@@ -110,23 +177,6 @@ export default function Jefe({ equipos, favoritos }) {
         }); */
       //console.log("SUBIDA", data);
       //console.log("INSUBIDA", error);
-
-      /* const { data, error } = await supabaseClient
-        .from("usuarios")
-        .update({
-          hincha: values.hinchade,
-          alias: values.polleroalias,
-          favorito: values.favorito,
-        })
-        .eq("id", user?.id)
-        .single();
-      if (data) {
-        setProfile(data);
-        //actions.resetForm();
-      }
-      if (error) {
-        console.log(error);
-      } */
     },
   });
 
@@ -153,9 +203,6 @@ const { data, error } = await supabase
 
   return (
     <Plantilla>
-      <VStack>
-        <UploadAvatar />
-      </VStack>
       <VStack
         as="form"
         justifyContent="center"
@@ -164,7 +211,9 @@ const { data, error } = await supabase
         w={{ base: "90%", md: 500 }}
         onSubmit={formik.handleSubmit}
       >
+        {imagen && <Image src={imagen} alt="Pollero" boxSize="nd" />}
         <Heading>Perfil {profile?.hincha} </Heading>
+
         <FormControl
           isInvalid={formik.errors.hinchade && formik.touched.hinchade}
         >
@@ -224,6 +273,11 @@ const { data, error } = await supabase
             disabled
           ></Input>
         </FormControl>
+        <UploadAvatar
+          imagen={imagen}
+          setImagen={setImagen}
+          setnuevaIMG={setnuevaIMG}
+        />
         <FormControl>
           <Input
             type="file"

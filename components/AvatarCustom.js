@@ -4,9 +4,11 @@ import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 const AvatarNoSSR = dynamic(() => import("react-avatar-edit"), { ssr: false });
 
-export const UploadAvatar = () => {
+export const UploadAvatar = ({ setImagen, setnuevaIMG }) => {
   const [src, setSrc] = useState("");
+
   const [preview, setPreview] = useState("");
+  const [ancho, setAncho] = useState(400);
 
   const dataURLtoFile = (dataurl, filename) => {
     var arr = dataurl.split(","),
@@ -28,12 +30,15 @@ export const UploadAvatar = () => {
   const onCrop = (view) => {
     setPreview(view);
   };
+
   useEffect(() => {
     if (preview) {
       const res = dataURLtoFile(preview, "perfil.png");
       console.log(res);
+      setImagen(preview);
+      setnuevaIMG(res);
     }
-  }, [preview]);
+  }, [preview, setImagen, setnuevaIMG]);
 
   return (
     <>
@@ -45,7 +50,11 @@ export const UploadAvatar = () => {
         src={src}
         label="seleccione una imagen chusca"
       ></AvatarNoSSR>
-      {preview && <Image src={preview} alt="Avatar de pollero" />}
     </>
   );
 };
+
+/* 
+
+      
+*/
