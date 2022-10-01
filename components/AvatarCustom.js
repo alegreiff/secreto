@@ -49,6 +49,8 @@ export const UploadAvatar = ({ setImagen, setnuevaIMG }) => {
         onClose={onClose}
         src={src}
         label="seleccione una imagen chusca"
+        exportSize={200}
+        cropColor={"crimson"}
       ></AvatarNoSSR>
     </>
   );
