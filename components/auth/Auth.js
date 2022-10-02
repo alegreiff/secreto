@@ -30,7 +30,10 @@ const Auth = ({ setUser }) => {
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log("HEVENTUS", event);
+        if (event === "SIGNED_IN") {
+          setUsuario(session?.user);
+        }
+        console.log("HEVENTUS", event, session);
         updateSupabaseCookie(event, session);
       }
     );
@@ -116,7 +119,7 @@ const Auth = ({ setUser }) => {
     });
     if (user) {
       console.log("DESDE AUTH EL USER", user);
-      setUsuario(user);
+      //setUsuario(user);
 
       router.push("/polla");
     }

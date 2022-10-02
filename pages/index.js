@@ -1,4 +1,4 @@
-import { Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import {
   getUser,
   supabaseServerClient,
@@ -22,34 +22,35 @@ import styles from "../styles/Home.module.css";
 import { fetcher } from "../utils/fetcher";
 
 export default function Home({ user, db_partidos }) {
-  const { data: userdata, error: usererror } = useSWR(
-    "/api/auth/user",
-    fetcher
-  );
-
-  const { user: userx, isLoading } = useUser();
-  useEffect(() => {
-    if (!isLoading) {
-      console.log("IS LOADDING");
-      if (userx) {
-        console.log("USER X");
-      } else {
-        console.log("NI CHI CHA NI LIMONÁ");
-      }
-    }
-  }, [isLoading, userx]);
-
   const partidos = useDatosPolla((state) => state.partidos);
   const setPartidos = useDatosPolla((state) => state.setPartidos);
 
   const { fechas, fase, setFase } = useDatosVivos((state) => state);
-  const { usuario } = useDatosPolla((state) => state);
+  const { usuario, setUsuario } = useDatosPolla((state) => state);
   console.log("ZUSTAND_USER", usuario);
   const tempo = useFase(fechas);
   /* const HOYDIA = format(new Date(fechas.HOY), "cccc MMM dd H':'mm a", {
     locale: es,
   }); */
   const HOYDIA = fechas.HOY;
+
+  const { data: userdata, error: usererror } = useSWR(
+    "/api/auth/user",
+    fetcher
+  );
+
+  const { user: userx, isLoading } = useUser();
+
+  useEffect(() => {
+    if (!isLoading) {
+      console.log("IS LOADDING");
+      if (userx) {
+        setUsuario(userx);
+      } else {
+        console.log("NI CHI CHA NI LIMONÁ");
+      }
+    }
+  }, [isLoading, userx, setUsuario]);
 
   useEffect(() => {
     async function cargaPartidos() {
@@ -80,20 +81,21 @@ export default function Home({ user, db_partidos }) {
       <Plantilla>
         {/* {JSON.stringify(user)} */}
         <Button onClick={clearLocalStorage}> Limpia storage </Button>
-        <main className={styles.main}>
-          <h1 className={styles.title}>
-            ETAPA
-            <a href="#">
-              {tempo[0]} - {tempo[1]} - {tempo[2] ? "ABIERTO" : "CERRADO"}
-            </a>
-          </h1>
-          <Link href="/login">Login</Link>-<Link href="/profile">Perfil</Link>
-          <p className={styles.description}>
-            Get started by editing{" "}
-            <code className={styles.code}>pages/index.js</code>
-          </p>
-          {userdata && userdata?.user?.email}
-        </main>
+        <Box bg="teal.400" p={10}>
+          No es mi polla, no es tu polla, es Nuestra Polla
+        </Box>
+        <h1 className={styles.title}>
+          ETAPA
+          <a href="#">
+            {tempo[0]} - {tempo[1]} - {tempo[2] ? "ABIERTO" : "CERRADO"}
+          </a>
+        </h1>
+        <Link href="/login">Login</Link>-<Link href="/profile">Perfil</Link>
+        <p className={styles.description}>
+          Get started by editing{" "}
+          <code className={styles.code}>pages/index.js</code>
+        </p>
+        {userdata && userdata?.user?.email}
       </Plantilla>
     </>
   );
