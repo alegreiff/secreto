@@ -6,24 +6,27 @@ import Auth from "../components/auth/Auth";
 import useSWR from "swr";
 import { fetcher } from "../utils/fetcher";
 
+import useDatosPolla from "../store/datospolla";
+
 const LoginPage = () => {
+  const { usuario, clearUsuario } = useDatosPolla((state) => state);
+
   const { data: userdata, error: usererror } = useSWR(
     "/api/auth/user",
     fetcher
   );
 
-  console.log("SWR", userdata);
-  console.log("SWR", usererror);
+  //console.log("SWR", userdata);
+  //console.log("SWR", usererror);
 
   //const { user: usuario, error } = useUser();
   const [data, setData] = useState();
   const [user, setUser] = useState(null);
-  console.log("DESDE LOGIN USER", user);
 
   useEffect(() => {
-    setUser(userdata);
-  }, [userdata]);
-
+    setUser(usuario);
+  }, [usuario]);
+  console.log("DESDE LOGIN USER", user);
   const router = useRouter();
 
   useEffect(() => {
@@ -37,11 +40,12 @@ const LoginPage = () => {
 
   const handleLogout = () => {
     supabaseClient.auth.signOut();
+    clearUsuario();
     router.push("/api/auth/logout");
     //console.log("Saliendo babi");
   };
 
-  if (!user?.user)
+  if (!user)
     return (
       <>
         {usererror && <p>{usererror.message}</p>}

@@ -282,6 +282,7 @@ export default function PerfilUpdate({ equipos, favoritos }) {
 export const getServerSideProps = withPageAuth({
   redirectTo: "/",
   async getServerSideProps(ctx) {
+    console.log("Es un ba ché");
     // Run queries with RLS on the server
     const { data: equipos } = await supabaseServerClient(ctx)
       .from("listahinchas")

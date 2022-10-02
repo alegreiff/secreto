@@ -11,17 +11,43 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import supabase from "../../utils/useSupabase";
 
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 
+import useDatosPolla from "../../store/datospolla";
+
 const Auth = ({ setUser }) => {
+  const { usuario, setUsuario, clearUsuario } = useDatosPolla((state) => state);
+
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [isSignUp, setIsSignUp] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log("HEVENTUS", event);
+        updateSupabaseCookie(event, session);
+      }
+    );
+
+    return () => {
+      authListener?.unsubscribe();
+    };
+  });
+
+  async function updateSupabaseCookie(event, session) {
+    await fetch("/api/auth/callback", {
+      method: "POST",
+      headers: new Headers({ "Content-Type": "application/json" }),
+      credentials: "same-origin",
+      body: JSON.stringify({ event, session }),
+    });
+  }
 
   const checkEmail = async (email) => {
     let { data: usuario, error } = await supabase
@@ -90,6 +116,7 @@ const Auth = ({ setUser }) => {
     });
     if (user) {
       console.log("DESDE AUTH EL USER", user);
+      setUsuario(user);
 
       router.push("/polla");
     }

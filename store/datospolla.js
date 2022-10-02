@@ -4,6 +4,13 @@ import { persist } from "zustand/middleware";
 const useDatosPolla = create(
   persist(
     (set, get) => ({
+      usuario: null,
+      setUsuario: (params) => {
+        set((state) => ({
+          usuario: params,
+        }));
+      },
+      clearUsuario: () => set({ usuario: null }),
       partidos: [],
       setPartidos: (params) => {
         set((state) => ({

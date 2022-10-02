@@ -4,6 +4,7 @@ import {
   supabaseServerClient,
   supabaseClient,
 } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@supabase/auth-helpers-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -26,10 +27,24 @@ export default function Home({ user, db_partidos }) {
     fetcher
   );
 
+  const { user: userx, isLoading } = useUser();
+  useEffect(() => {
+    if (!isLoading) {
+      console.log("IS LOADDING");
+      if (userx) {
+        console.log("USER X");
+      } else {
+        console.log("NI CHI CHA NI LIMONÁ");
+      }
+    }
+  }, [isLoading, userx]);
+
   const partidos = useDatosPolla((state) => state.partidos);
   const setPartidos = useDatosPolla((state) => state.setPartidos);
 
   const { fechas, fase, setFase } = useDatosVivos((state) => state);
+  const { usuario } = useDatosPolla((state) => state);
+  console.log("ZUSTAND_USER", usuario);
   const tempo = useFase(fechas);
   /* const HOYDIA = format(new Date(fechas.HOY), "cccc MMM dd H':'mm a", {
     locale: es,
