@@ -105,7 +105,7 @@ const Auth = ({ setUser }) => {
       provider: "github",
     }); */
 
-    const rutaRedireccion = window.location.origin + "/polla/";
+    const rutaRedireccion = window.location.origin + "/polladecaramelo/";
     console.log("ROUTE", rutaRedireccion);
     const { user, session, error } = await supabase.auth.signIn(
       {

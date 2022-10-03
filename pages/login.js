@@ -1,32 +1,15 @@
-//import { useUser } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
+import { Auth } from "@supabase/ui";
+import { useUser } from "@supabase/auth-helpers-react";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/router";
-import Auth from "../components/auth/Auth";
-import useSWR from "swr";
-import { fetcher } from "../utils/fetcher";
-
+import { useEffect, useState } from "react";
+import Plantilla from "../components/layout/MainLayout";
 import useDatosPolla from "../store/datospolla";
+import { useRouter } from "next/router";
 
 const LoginPage = () => {
   const { usuario, clearUsuario } = useDatosPolla((state) => state);
-
-  const { data: userdata, error: usererror } = useSWR(
-    "/api/auth/user",
-    fetcher
-  );
-
-  //console.log("SWR", userdata);
-  //console.log("SWR", usererror);
-
-  //const { user: usuario, error } = useUser();
+  const { user, error } = useUser();
   const [data, setData] = useState();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    setUser(usuario);
-  }, [usuario]);
-  console.log("DESDE LOGIN USER", user);
   const router = useRouter();
 
   useEffect(() => {
@@ -48,21 +31,28 @@ const LoginPage = () => {
   if (!user)
     return (
       <>
-        {usererror && <p>{usererror.message}</p>}
-        <Auth setUser={setUser} />
+        <Plantilla>
+          {error && <p>{error.message}</p>}
+          <Auth
+            supabaseClient={supabaseClient}
+            providers={["google", "github"]}
+            socialLayout="horizontal"
+            socialButtonSize="xlarge"
+          />
+        </Plantilla>
       </>
     );
 
   return (
     <>
-      <button onClick={handleLogout}>Sign out</button>
-      {/* <Link href="/api/auth/logout">Salid</Link> */}
-      <p>user:</p>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
-      <p>client-side data fetching with RLS</p>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <Plantilla>
+        <button onClick={handleLogout}>Sign out</button>
+        <p>user:</p>
+        <pre>{JSON.stringify(user, null, 2)}</pre>
+        <p>client-side data fetching with RLS</p>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      </Plantilla>
     </>
   );
 };
-
 export default LoginPage;

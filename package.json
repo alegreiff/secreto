@@ -17,6 +17,7 @@
     "@supabase/auth-helpers-react": "^0.2.4",
     "@supabase/gotrue-js": "^1.20.0",
     "@supabase/supabase-js": "^1.35.7",
+    "@supabase/ui": "^0.36.5",
     "date-fns": "^2.29.3",
     "formik": "^2.2.9",
     "framer-motion": "^6",
