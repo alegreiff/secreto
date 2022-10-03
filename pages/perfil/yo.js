@@ -14,6 +14,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
 import {
+  getUser,
   supabaseClient,
   supabaseServerClient,
   withPageAuth,
@@ -34,6 +35,10 @@ export default function PerfilUpdate({ equipos, favoritos }) {
   const cambiaImagos = (datos) => {
     setImagen(datos);
   };
+  useEffect(() => {
+    const user = supabaseClient.auth.user();
+    console.log("KIO KIO", user);
+  }, []);
   useEffect(() => {
     async function getImage(userid) {
       /* const { data: list, error: err1 } = await supabaseClient.storage
@@ -282,6 +287,9 @@ export default function PerfilUpdate({ equipos, favoritos }) {
 export const getServerSideProps = withPageAuth({
   redirectTo: "/",
   async getServerSideProps(ctx) {
+    const { user, accessToken } = await getUser(ctx);
+    console.log("elIUser", user);
+
     console.log("Es un ba ché");
     // Run queries with RLS on the server
     const { data: equipos } = await supabaseServerClient(ctx)
@@ -299,3 +307,22 @@ export const getServerSideProps = withPageAuth({
     return { props: { equipos, favoritos } };
   },
 });
+
+/* export async function getServerSideProps(ctx) {
+  const { user } = await getUser(ctx);
+  console.log("USER", user);
+
+  const { data: equipos } = await supabaseServerClient(ctx)
+    .from("listahinchas")
+    .select(
+      `
+        nombre:unnest
+        `
+    );
+  const { data: favoritos } = await supabaseServerClient(ctx)
+    .from("equipos")
+    .select("id, nombre")
+    .order("nombre");
+
+  return { props: { equipos, favoritos, user } };
+} */

@@ -30,11 +30,11 @@ const Auth = ({ setUser }) => {
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log("HEVENTUS", event, session);
+        updateSupabaseCookie(event, session);
         if (event === "SIGNED_IN") {
           setUsuario(session?.user);
         }
-        console.log("HEVENTUS", event, session);
-        updateSupabaseCookie(event, session);
       }
     );
 
@@ -44,12 +44,20 @@ const Auth = ({ setUser }) => {
   });
 
   async function updateSupabaseCookie(event, session) {
-    await fetch("/api/auth/callback", {
+    const res = await fetch("/api/auth/callback", {
       method: "POST",
       headers: new Headers({ "Content-Type": "application/json" }),
       credentials: "same-origin",
       body: JSON.stringify({ event, session }),
     });
+    if (res) {
+      console.log("RES", res);
+      const user = await fetch("/api/auth/user", { method: "GET" });
+      let respuesta = await res.json();
+      if (respuesta) {
+        console.log("USUARIO DESDE API USER", respuesta);
+      }
+    }
   }
 
   const checkEmail = async (email) => {

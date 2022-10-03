@@ -43,11 +43,8 @@ export default function Home({ user, db_partidos }) {
 
   useEffect(() => {
     if (!isLoading) {
-      console.log("IS LOADDING");
       if (userx) {
         setUsuario(userx);
-      } else {
-        console.log("NI CHI CHA NI LIMONÁ");
       }
     }
   }, [isLoading, userx, setUsuario]);

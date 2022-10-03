@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import NextLink from "next/link";
 
 import {
@@ -15,6 +15,7 @@ import {
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import UserMenu from "./UserMenu";
 import { useUser } from "@supabase/auth-helpers-react";
+import useDatosPolla from "../../store/datospolla";
 
 const Links = ["Dashboard", "Projects", "Team"];
 
@@ -34,9 +35,17 @@ const NavLink = ({ children }) => (
 );
 
 export default function Plantilla({ children }) {
+  const { usuario, setUsuario } = useDatosPolla((state) => state);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { user, error } = useUser();
+  const { user: userx, isLoading } = useUser();
+  useEffect(() => {
+    if (!isLoading) {
+      if (userx) {
+        setUsuario(userx);
+      }
+    }
+  }, [isLoading, userx, setUsuario]);
 
   return (
     <Container maxW="container.xl">
@@ -77,7 +86,7 @@ export default function Plantilla({ children }) {
             </HStack>
           </HStack>
           <Flex alignItems={"center"}>
-            {user ? <UserMenu user={user} /> : ""}
+            {usuario ? <UserMenu user={usuario} /> : ""}
           </Flex>
         </Flex>
 
@@ -93,7 +102,7 @@ export default function Plantilla({ children }) {
       </Box>
 
       <Box p={4}>
-        <h4> {user?.email} </h4>
+        <h4> {usuario?.email} </h4>
         {children}
       </Box>
     </Container>
